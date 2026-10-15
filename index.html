@@ -28,7 +28,7 @@
 
   /* Шапка */
   .hero { position: relative; min-height: 100vh; min-height: 100svh; display: flex; align-items: center; color: #fff; overflow: hidden; }
-  .hero img { position: absolute; inset: 0; object-position: 50% 60%; filter: grayscale(1) contrast(1.05); }
+  .hero img { position: absolute; inset: 0; object-position: 50% 60%; filter: grayscale(1) contrast(1.05); transition: filter .4s ease; }
   .hero::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(8,14,18,.78) 0%, rgba(8,14,18,.5) 35%, rgba(8,14,18,0) 65%); }
   .hero .hero-text { position: relative; z-index: 2; width: 100%; max-width: 700px; padding: 80px 20px 80px clamp(20px, 8vw, 160px); box-sizing: content-box; }
   .hero .brand { margin-bottom: 18px; font-size: clamp(12px, 1.1vw, 14px); font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: rgba(255,255,255,.78); }
@@ -54,7 +54,7 @@
   .format { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; padding: 40px 0; border-top: 1px solid var(--line); }
   .format:nth-child(even) .format-photo { order: 2; }
   .format-photo { height: clamp(220px, 20vw, 280px); background: #0d1317; }
-  .format-photo img { filter: grayscale(1) contrast(1.08); object-position: 50% 50%; }
+  .format-photo img { filter: grayscale(1) contrast(1.08); object-position: 50% 50%; transition: filter .4s ease; }
   .format:nth-child(2) .format-photo img { object-position: 50% 38%; }
   .format:nth-child(3) .format-photo img { object-position: 50% 55%; }
   .format h3 { font-size: clamp(1.5rem, 2.6vw, 2rem); letter-spacing: -.01em; margin-bottom: 12px; }
@@ -80,8 +80,17 @@
   .exp-photos { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: 1fr 1fr; gap: 12px; height: clamp(320px, 42vw, 460px); margin-top: 64px; }
   .exp-photos figure { background: #0d1317; overflow: hidden; }
   .exp-photos figure:first-child { grid-row: 1 / 3; }
-  .exp-photos img { filter: grayscale(1) contrast(1.08); }
+  .exp-photos img { filter: grayscale(1) contrast(1.08); transition: filter .4s ease; }
+  @media (hover: hover) {
+    .hero:hover img, .format-photo:hover img, .exp-photos figure:hover img, .exp-people figure:hover img, .personal .photo:hover img { filter: none; }
+  }
   .exp-photos figure:first-child img { object-position: 50% 45%; }
+  .exp-people { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 12px; }
+  .exp-people figure { position: relative; height: clamp(180px, 20vw, 260px); background: #0d1317; overflow: hidden; }
+  .exp-people img { filter: grayscale(1) contrast(1.08); transition: filter .4s ease; }
+  .exp-people figure:nth-child(1) img { object-position: 50% 25%; }
+  .exp-people figure:nth-child(2) img { object-position: 50% 30%; }
+  .exp-people figcaption { position: absolute; right: 10px; bottom: 8px; font-size: .7rem; line-height: 1.2; letter-spacing: .02em; color: rgba(255,255,255,.7); text-shadow: 0 1px 3px rgba(0,0,0,.7); pointer-events: none; }
   .exp-speakers { margin-top: 48px; max-width: 700px; font-size: 1.1rem; color: var(--muted); }
   .exp-speakers b { color: var(--ink); font-weight: 700; white-space: nowrap; }
   .exp-own { margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--line); font-size: .95rem; color: var(--muted); }
@@ -91,6 +100,8 @@
     .exp-num span { margin-top: 0; padding-bottom: 6px; }
     .exp-photos { grid-template-columns: 1fr; grid-template-rows: none; height: auto; margin-top: 48px; }
     .exp-photos figure, .exp-photos figure:first-child { grid-row: auto; height: 220px; }
+    .exp-people { grid-template-columns: 1fr; }
+    .exp-people figure { height: 220px; }
     .exp-speakers { margin-top: 36px; }
   }
   @media (max-width: 480px) {
@@ -137,7 +148,7 @@
   /* Личное */
   .personal { display: grid; gap: 28px; align-items: center; }
   .personal .photo { height: 380px; border-radius: 14px; overflow: hidden; background: #0d1317; }
-  .personal .photo img { object-position: 50% 25%; }
+  .personal .photo img { object-position: 50% 25%; filter: grayscale(1) contrast(1.08); transition: filter .5s ease; }
 
   /* Финал */
   .contact { margin-top: 72px; padding: clamp(40px, 6vw, 64px) 0; background: var(--ink); color: #eef3f5; }
@@ -155,9 +166,31 @@
   @media (min-width: 780px) {
       .personal { grid-template-columns: 1fr 1fr; }
   }
+  /* Верхняя навигация */
+  html { scroll-behavior: smooth; scroll-padding-top: 56px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  .topnav { position: fixed; top: 0; left: 0; right: 0; z-index: 10; background: rgba(8,14,18,.82); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .topnav ul { list-style: none; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 28px; max-width: 960px; margin: 0 auto; padding: 14px 20px; }
+  .topnav a { color: #eef3f5; text-decoration: none; font-size: .95rem; border-bottom: 1px solid transparent; padding-bottom: 2px; }
+  .topnav a:hover, .topnav a:focus-visible { border-bottom-color: var(--accent-2); }
+  @media (max-width: 520px) {
+    html { scroll-padding-top: 48px; }
+    .topnav ul { justify-content: space-between; gap: 4px 12px; padding: 10px 16px; }
+    .topnav a { font-size: .8rem; }
+  }
 </style>
 </head>
 <body>
+
+<nav class="topnav" aria-label="Основная навигация">
+  <ul>
+    <li><a href="#formats">Мероприятия</a></li>
+    <li><a href="#approach">Подход</a></li>
+    <li><a href="#experience">Опыт</a></li>
+    <li><a href="#facts">Обо мне</a></li>
+    <li><a href="#contact">Контакты</a></li>
+  </ul>
+</nav>
 
 <header class="hero">
   <img src="images/hero.jpg" alt="Деловое мероприятие: сцена и зрители">
@@ -239,6 +272,12 @@
       <figure><img src="images/cinema-hall.jpg" alt="Участники делового мероприятия в зале"></figure>
     </div>
 
+    <div class="exp-people">
+      <figure><img src="images/taleb.jpg" alt="Нассим Талеб выступает на сцене"><figcaption>Нассим Талеб</figcaption></figure>
+      <figure><img src="images/adizes.jpg" alt="Ицхак Адизес на сцене форума"><figcaption>Ицхак Адизес</figcaption></figure>
+      <figure><img src="images/life-energy.jpg" alt="Зал мероприятия Life Energy от «Про Бизнес»"><figcaption>Life Energy · Про Бизнес</figcaption></figure>
+    </div>
+
     <p class="exp-speakers">Среди спикеров мероприятий — <b>Нассим Талеб</b>, <b>Ицхак Адизес</b>, <b>Нуриэль Рубини</b>, <b>Рэй Курцвейл</b>, <b>Сол Сингер</b>, <b>Давид Ян</b>.</p>
 
     <p class="exp-own">Автор и создатель проекта «Бери и делай» для «Про Бизнес Медиа».</p>
@@ -273,6 +312,10 @@
       <div class="more-item">
         <h3>Масштаб мероприятий</h3>
         <p>Есть опыт организации мероприятий с аудиторией до 2500 участников.</p>
+      </div>
+      <div class="more-item">
+        <h3>Работа со спикерами — от поиска до выступления</h3>
+        <p>От понимания, какой эксперт нужен мероприятию, и поиска контакта до переговоров и совместной работы над темой, структурой и презентацией выступления. В том числе — работа с экспертами, которые впервые выходят на большую сцену.</p>
       </div>
     </div>
   </section>
