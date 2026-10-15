@@ -84,6 +84,7 @@
   @media (hover: hover) {
     .hero:hover img, .format-photo:hover img, .exp-photos figure:hover img, .exp-people figure:hover img, .personal .photo:hover img { filter: none; }
   }
+  .hero img.is-color, .format-photo img.is-color, .exp-photos img.is-color, .exp-people img.is-color, .personal .photo img.is-color { filter: none; }
   .exp-photos figure:first-child img { object-position: 50% 45%; }
   .exp-people { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 12px; }
   .exp-people figure { position: relative; height: clamp(180px, 20vw, 260px); background: #0d1317; overflow: hidden; }
@@ -352,5 +353,14 @@
   <div class="wrap">Фотографии — из архива проектов и личного архива автора страницы.</div>
 </footer>
 
+<script>
+  // На сенсорных экранах нет hover: фото становится цветным, когда оказывается в центре экрана
+  if (window.matchMedia('(hover: none)').matches && 'IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { e.target.classList.toggle('is-color', e.isIntersecting); });
+    }, { rootMargin: '-35% 0px -35% 0px' });
+    document.querySelectorAll('.hero img, .format-photo img, .exp-photos img, .exp-people img, .personal .photo img').forEach(function (i) { io.observe(i); });
+  }
+</script>
 </body>
 </html>
