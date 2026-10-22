@@ -2,6 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
+<script>document.documentElement.classList.add('js');</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Ирина Ермакова — деловые мероприятия</title>
@@ -34,6 +35,7 @@
   .hero .brand { margin-bottom: 18px; font-size: clamp(12px, 1.1vw, 14px); font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: rgba(255,255,255,.78); }
   .hero h1 { font-size: clamp(36px, 4vw, 60px); font-weight: 700; line-height: 1.12; }
   .hero .role { margin-top: 22px; font-size: clamp(17px, 1.5vw, 22px); line-height: 1.5; color: #fff; font-weight: 400; }
+  .hero .hero-btn { margin-top: 28px; }
   @media (min-width: 641px) { .hero h1 .l1 { white-space: nowrap; } }
   @media (max-width: 640px) { .hero .hero-text { padding-left: 20px; } .hero h1 br { display: none; } }
 
@@ -72,7 +74,7 @@
   .exp-head .intro { max-width: 620px; padding-left: 18px; border-left: 3px solid var(--accent-2); font-size: 1.05rem; color: var(--muted); }
   .exp-nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 40px; }
   .exp-num { border-top: 1px solid var(--line); padding-top: 24px; }
-  .exp-num b { display: block; font-size: clamp(3rem, 6.4vw, 4.8rem); font-weight: 300; line-height: 1; letter-spacing: -.03em; color: var(--accent); }
+  .exp-num b { display: block; font-size: clamp(4rem, 8vw, 6.2rem); font-weight: 300; line-height: 1; letter-spacing: -.03em; color: var(--accent); }
   .exp-num b { white-space: nowrap; font-variant-numeric: tabular-nums; }
   .exp-num b .pre { display: inline; font-size: .36em; font-weight: 400; letter-spacing: 0; margin-right: .25em; color: var(--muted); }
   .exp-num b .unit { display: block; margin-top: 10px; font-size: 1.15rem; font-weight: 600; letter-spacing: 0; color: var(--ink); }
@@ -115,9 +117,33 @@
   .pillars { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
   .pillar { padding: 32px 24px 36px; border-left: 1px solid var(--line); }
   .pillar:first-child { border-left: 0; padding-left: 0; }
-  .pillar .num { display: block; font-size: 2.6rem; font-weight: 300; line-height: 1; color: var(--accent); margin-bottom: 28px; letter-spacing: -.02em; }
-  .pillar h3 { font-size: 1.15rem; margin-bottom: 10px; }
+  .pillar .num { display: block; font-size: clamp(3.8rem, 7vw, 6rem); font-weight: 300; line-height: .9; color: var(--accent); margin-bottom: 24px; letter-spacing: -.02em; transition: color .25s ease; }
+  .pillar h3 { font-size: 1.15rem; }
   .pillar p { font-size: .95rem; color: var(--muted); }
+  /* Этап раскрывается по нажатию: заголовок — кнопка, подробности — под коротким пояснением */
+  .pillar-toggle { display: block; width: 100%; padding: 0; background: none; border: 0; font: inherit; color: inherit; text-align: left; cursor: pointer; }
+  .pillar-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }
+  .pillar-title { display: block; margin-bottom: 10px; }
+  .pillar-short { display: block; font-size: .95rem; font-weight: 400; line-height: 1.65; color: var(--muted); }
+  /* Внизу колонки тонкая линия со стрелкой: при наведении заполняется красным слева направо */
+  .pillar-cue { display: none; }
+  .js .pillar > h3 { display: flex; }
+  .js .pillar-toggle { display: flex; flex-direction: column; }
+  .js .pillar-short { margin-bottom: 28px; }
+  .js .pillar-cue { position: relative; display: block; height: 1px; margin-top: auto; background: var(--line); }
+  .pillar-cue::before { content: ""; position: absolute; left: 0; top: 0; width: 0; height: 1px; background: var(--accent-2); transition: width .45s ease; }
+  .pillar-cue::after { content: ""; position: absolute; right: 2px; top: -12px; width: 7px; height: 7px; border-right: 1.5px solid var(--muted); border-bottom: 1.5px solid var(--muted); transform: rotate(45deg); transition: transform .35s ease, border-color .3s ease; }
+  .pillar.is-open .pillar-cue::before { width: 100%; }
+  .pillar.is-open .pillar-cue::after { border-color: var(--accent-2); transform: translateY(5px) rotate(-135deg); }
+  .pillar.is-open .num { color: var(--accent-2); }
+  @media (hover: hover) {
+    .pillar-toggle:hover .num { color: var(--accent-2); }
+    .pillar-toggle:hover .pillar-cue::before { width: 100%; }
+    .pillar-toggle:hover .pillar-cue::after { border-color: var(--accent-2); }
+  }
+  .pillar-more { display: grid; grid-template-rows: 1fr; }
+  .pillar-more > div { overflow: hidden; }
+  .pillar-more p { padding-top: 16px; font-size: .92rem; line-height: 1.6; color: var(--ink); opacity: .82; }
   @media (max-width: 860px) {
     .pillars { grid-template-columns: repeat(2, 1fr); }
     .pillar:nth-child(odd) { border-left: 0; padding-left: 0; }
@@ -127,7 +153,38 @@
     .pillars { grid-template-columns: 1fr; }
     .pillar { border-left: 0; padding-left: 0; padding-right: 0; padding-top: 24px; padding-bottom: 24px; }
     .pillar + .pillar { border-top: 1px solid var(--line); }
-    .pillar .num { margin-bottom: 14px; font-size: 2.2rem; }
+    .pillar .num { margin-bottom: 14px; font-size: 3.6rem; }
+  }
+  /* С JS: этапы стоят в ряд, а подробности открываются под рядом на всю ширину,
+     чтобы текст не вытягивал узкую колонку. На телефоне — прямо под этапом. */
+  .js .pillar { display: contents; }
+  .js .pillar > h3 { padding: 32px 24px 28px; border-left: 1px solid var(--line); }
+  .js .pillar:first-child > h3 { border-left: 0; padding-left: 0; }
+  .js .pillar:nth-child(1) > h3 { grid-column: 1; grid-row: 1; }
+  .js .pillar:nth-child(2) > h3 { grid-column: 2; grid-row: 1; }
+  .js .pillar:nth-child(3) > h3 { grid-column: 3; grid-row: 1; }
+  .js .pillar:nth-child(4) > h3 { grid-column: 4; grid-row: 1; }
+  .js .pillar-more { grid-column: 1 / -1; grid-row: 2; grid-template-rows: 0fr; transition: grid-template-rows .4s ease; }
+  .js .pillar-more > div { visibility: hidden; opacity: 0; transition: opacity .25s ease, visibility 0s linear .4s; }
+  .js .pillar-more p { padding: 26px max(0px, calc(100% - 680px)) 34px 0; border-top: 1px solid var(--line); font-size: .98rem; }
+  .js .pillar.is-open .pillar-more { grid-template-rows: 1fr; }
+  .js .pillar.is-open .pillar-more > div { visibility: visible; opacity: 1; transition: opacity .35s ease .12s, visibility 0s; }
+  @media (max-width: 860px) {
+    .js .pillar:nth-child(odd) > h3 { border-left: 0; padding-left: 0; }
+    .js .pillar:nth-child(n+3) > h3 { border-top: 1px solid var(--line); }
+    .js .pillar:nth-child(1) > h3, .js .pillar:nth-child(3) > h3 { grid-column: 1; }
+    .js .pillar:nth-child(2) > h3, .js .pillar:nth-child(4) > h3 { grid-column: 2; }
+    .js .pillar:nth-child(n+3) > h3 { grid-row: 3; }
+    .js .pillar:nth-child(n+3) .pillar-more { grid-row: 4; }
+  }
+  @media (max-width: 520px) {
+    .js .pillar > h3, .js .pillar-more { grid-column: 1 !important; grid-row: auto !important; }
+    .js .pillar > h3 { border-left: 0; padding: 24px 0; }
+    .js .pillar + .pillar > h3 { border-top: 1px solid var(--line); }
+    .js .pillar-more p { padding: 0 0 24px; border-top: 0; font-size: .95rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .js .pillar-more, .js .pillar-more > div, .js .pillar > h3, .pillar-cue::before, .pillar-cue::after, .pillar .num { transition: none; }
   }
 
 
@@ -200,6 +257,7 @@
     <div class="brand">Ermakova Business Events</div>
     <h1><span class="l1">Создание и организация</span><br> деловых мероприятий</h1>
     <p class="role">Форумы, конференции и бизнес-ивенты — от разработки концепции до реализации проекта.</p>
+    <a class="contact-btn hero-btn" href="#contact">Обсудить событие</a>
   </div>
 </header>
 
@@ -209,14 +267,26 @@
     <div class="approach-head">
       <h2>От идеи до реализации</h2>
       <p class="sub">Как создаются деловые мероприятия</p>
-      <p class="intro">Хорошее мероприятие начинается с понимания того, для кого и зачем мы его создаём. А дальше появляются идея, программа, спикеры и команда, которая помогает воплотить задуманное</p>
+      <p class="intro">Хорошее мероприятие начинается с понимания того, для кого и зачем мы его создаём. А дальше появляются идея, программа, спикеры и команда, которая помогает воплотить задуманное.</p>
     </div>
     <p class="bridge">Как это происходит на практике?</p>
     <div class="pillars">
-      <div class="pillar"><span class="num">01</span><h3>Концепция</h3><p>Цели бизнеса и идея мероприятия.</p></div>
-      <div class="pillar"><span class="num">02</span><h3>Программа и спикеры</h3><p>Содержание, темы, эксперты.</p></div>
-      <div class="pillar"><span class="num">03</span><h3>Команда и организация</h3><p>Координация участников и процессов.</p></div>
-      <div class="pillar"><span class="num">04</span><h3>Реализация проекта</h3><p>Проведение мероприятия и общий результат.</p></div>
+      <div class="pillar">
+        <h3><button class="pillar-toggle" type="button" aria-expanded="false" aria-controls="pillar-1"><span class="num">1</span><span class="pillar-title">Концепция</span><span class="pillar-short">От бизнес-задачи к идее мероприятия.</span><span class="pillar-cue" aria-hidden="true"></span></button></h3>
+        <div class="pillar-more" id="pillar-1"><div><p>Сначала важно понять, какую задачу бизнеса должно решить мероприятие, для кого оно создаётся и что участники должны получить. От этого зависят концепция, формат и содержание будущего события.</p></div></div>
+      </div>
+      <div class="pillar">
+        <h3><button class="pillar-toggle" type="button" aria-expanded="false" aria-controls="pillar-2"><span class="num">2</span><span class="pillar-title">Программа и спикеры</span><span class="pillar-short">Темы, эксперты и содержание выступлений.</span><span class="pillar-cue" aria-hidden="true"></span></button></h3>
+        <div class="pillar-more" id="pillar-2"><div><p>Подбираю спикеров с учётом задач мероприятия и интересов аудитории. Работа не заканчивается приглашением: вместе с экспертом мы уточняем тему, выстраиваем структуру выступления и прорабатываем презентацию. В том числе работаю с экспертами, которые впервые выступают перед большой аудиторией.</p></div></div>
+      </div>
+      <div class="pillar">
+        <h3><button class="pillar-toggle" type="button" aria-expanded="false" aria-controls="pillar-3"><span class="num">3</span><span class="pillar-title">Команда и организация</span><span class="pillar-short">Люди, процессы и взаимодействие.</span><span class="pillar-cue" aria-hidden="true"></span></button></h3>
+        <div class="pillar-more" id="pillar-3"><div><p>Объединяю работу команды, партнёров и подрядчиков, координирую процессы и помогаю находить решения в сложных ситуациях. Образование психолога помогает мне лучше понимать людей, замечать особенности взаимодействия и выстраивать рабочую коммуникацию.</p></div></div>
+      </div>
+      <div class="pillar">
+        <h3><button class="pillar-toggle" type="button" aria-expanded="false" aria-controls="pillar-4"><span class="num">4</span><span class="pillar-title">Реализация проекта</span><span class="pillar-short">От подготовки до финального результата.</span><span class="pillar-cue" aria-hidden="true"></span></button></h3>
+        <div class="pillar-more" id="pillar-4"><div><p>Слежу за тем, чтобы программа, визуальное оформление и организация работали как единое целое. Важно, чтобы идея, заложенная в концепцию, последовательно воплощалась на каждом этапе — от первых материалов до самого мероприятия.</p></div></div>
+      </div>
     </div>
   </section>
 
@@ -338,9 +408,9 @@
 
 <section class="contact" id="contact">
   <div class="wrap">
-    <h2>Давайте обсудим ваш проект</h2>
-    <p>Есть идея мероприятия или задача, которую нужно решить? Обсудим формат и возможные решения.</p>
-    <a class="contact-btn" href="mailto:irina.ermakova99@gmail.com?subject=%D0%9E%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82">Обсудить проект</a>
+    <h2>Давайте обсудим ваше событие</h2>
+    <p>Начнём с бесплатной встречи на 30–40 минут: разберём задачу, а через пару дней я пришлю идею и формат мероприятия. Это ни к чему не обязывает.</p>
+    <a class="contact-btn" href="mailto:irina.ermakova99@gmail.com?subject=%D0%9E%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82">Обсудить событие</a>
     <div class="contact-links">
       <a href="https://t.me/+375297099978" target="_blank" rel="noopener">Telegram</a>
       <a href="viber://chat?number=%2B375297099978">Viber</a>
@@ -355,6 +425,17 @@
 </footer>
 
 <script>
+  // Этапы «От идеи до реализации»: по нажатию открывается один этап, остальные закрываются
+  document.querySelectorAll('.pillar-toggle').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var open = btn.getAttribute('aria-expanded') !== 'true';
+      document.querySelectorAll('.pillar-toggle').forEach(function (b) {
+        b.setAttribute('aria-expanded', b === btn && open ? 'true' : 'false');
+        b.closest('.pillar').classList.toggle('is-open', b === btn && open);
+      });
+    });
+  });
+
   // На сенсорных экранах нет hover: фото становится цветным, когда оказывается в центре экрана
   if (window.matchMedia('(hover: none)').matches && 'IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries) {
