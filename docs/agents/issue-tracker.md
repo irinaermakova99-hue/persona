@@ -2,7 +2,7 @@
 
 Issues and specs for this repo live as GitHub issues in `irinaermakova99-hue/persona`. Use the `gh` CLI for all operations.
 
-> As of 2026-10-22 `gh` is not installed on Irina's Mac. If `gh` is missing, stop and ask Irina to install it (`gh auth login` after install) instead of working around it. The triage labels from `triage-labels.md` don't exist in the repo yet: create them with `gh label create <name>` before first use.
+> `gh` lives in `~/.local/bin/gh` (added to PATH in `~/.zshrc`). If the command isn't found, call it by that full path. The triage labels from `triage-labels.md` already exist in the repo.
 
 ## Conventions
 
