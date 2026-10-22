@@ -9,7 +9,6 @@
 **Что где лежит.**
 
 - `index.html` — сама страница: тексты, стили и скрипты в одном файле.
-- `index-brand.html` — копия страницы. Сейчас она полностью совпадает с `index.html`; любую правку вносим в оба файла.
 - `images/` — фотографии для страницы.
 - `profile.md`, `про-меня.md`, `проекты.md`, `факты.md` — исходные тексты о Ирине, из которых написана страница. Цифры и факты сверяем с ними.
 - `linkedin/` — тексты и баннер для профиля в LinkedIn, на сайт не попадают.
@@ -30,7 +29,7 @@ A site for Irina Ermakova's own business "Ermakova Business Events" (business ev
 
 ## Structure
 
-- `index.html` and `index-brand.html` — two self-contained single-page copies (inline `<style>` and `<script>`, no external deps). They are currently identical. Any content or style change must be applied to **both** files, or the copies drift.
+- `index.html` — the whole site: a self-contained single page (inline `<style>` and `<script>`, no external deps).
 - `images/` — all photos, referenced by relative path (`images/*.jpg`) from the HTML. Alt text is in Russian.
 - `profile.md`, `про-меня.md`, `проекты.md`, `факты.md` — first-person source copy (bio, projects/assets, verified facts). `profile.md` is the most recently updated and most complete. The page text is derived from these; they are not rendered by anything.
 - `docs/superpowers/specs/` — design docs; read the relevant one before changing the page.
