@@ -8,7 +8,7 @@ const vm = require('node:vm');
 
 const script = vm.createContext({});
 vm.runInContext(fs.readFileSync(path.join(__dirname, 'apps-script.gs'), 'utf8'), script);
-const { parseRegistration, allRequestsRow } = script;
+const { parseRegistration, allRequestsRow, cityRow, rowAfterLastFilled } = script;
 
 const valid = {
   name: 'Анна Петрова',
@@ -69,4 +69,31 @@ test('тема необязательна, лишние пробелы по кр
   const row = allRequestsRow(result.registration, new Date());
   assert.equal(row[1], 'Анна Петрова');
   assert.equal(row[6], '');
+});
+
+test('строка для листа города: без колонки «Города»', () => {
+  const result = parseRegistration(JSON.stringify(valid));
+  const at = new Date('2026-11-01T09:30:00Z');
+  assert.deepEqual(Array.from(cityRow(result.registration, at)), [
+    at,
+    'Анна Петрова',
+    'ООО «Ромашка»',
+    '+375 29 123-45-67',
+    'anna@example.com',
+    'Как выйти на новые рынки',
+  ]);
+});
+
+test('новая строка встаёт под последней заполненной строкой своих колонок', () => {
+  assert.equal(rowAfterLastFilled([]), 1);
+  assert.equal(rowAfterLastFilled([['Дата и время', 'ФИО']]), 2);
+  assert.equal(rowAfterLastFilled([['Дата и время', 'ФИО'], ['x', 'Анна'], ['', ''], ['', '']]), 3);
+});
+
+test('пустые строки в середине не сбивают: считается последняя заполненная', () => {
+  assert.equal(rowAfterLastFilled([['Шапка'], [''], ['Анна'], ['']]), 4);
+});
+
+test('строка, где заполнена только одна из своих колонок, считается заполненной', () => {
+  assert.equal(rowAfterLastFilled([['Шапка', ''], ['', 'тема'], ['', '']]), 3);
 });

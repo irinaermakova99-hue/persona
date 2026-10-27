@@ -41,6 +41,23 @@ function allRequestsRow(registration, receivedAt) {
   return [receivedAt, r.name, r.company, r.phone, r.email, r.cities.join(', '), r.topic];
 }
 
+// Строка листа города: Дата и время | ФИО | Компания | Телефон | Email | Тема.
+function cityRow(registration, receivedAt) {
+  var r = registration;
+  return [receivedAt, r.name, r.company, r.phone, r.email, r.topic];
+}
+
+// values — содержимое своих колонок листа начиная с первой строки.
+// Возвращает номер строки (с 1) сразу под последней, где заполнена хоть одна своя колонка.
+// Колонки Ирины правее сюда не попадают, поэтому её пометки на выбор строки не влияют.
+function rowAfterLastFilled(values) {
+  for (var i = values.length - 1; i >= 0; i--) {
+    var filled = values[i].some(function (cell) { return cell !== '' && cell !== null; });
+    if (filled) return i + 2;
+  }
+  return 1;
+}
+
 // ---- Дальше работа с Google: автотестов нет, проверяем руками по SETUP.md ----
 
 var ALL_REQUESTS_SHEET = 'Все заявки';
@@ -64,12 +81,33 @@ function doGet() {
   return ContentService.createTextOutput('Скрипт «Деловой маршрут» работает. Заявки принимаются со страницы ивента.');
 }
 
-// appendRow ставит строку под последней заполненной строкой всего листа, включая колонки
-// Ирины справа, и работает без блокировки. Для #11 хватает; в #12 это заменяется.
+var CITY_HEADER = ['Дата и время', 'ФИО', 'Компания', 'Телефон', 'Email', 'Тема'];
+
+// Заявка ложится строкой на «Все заявки» и на лист каждого выбранного города.
+// Блокировка: пока одна заявка ищет свободную строку и пишет, вторая ждёт,
+// иначе обе нашли бы одну и ту же строку.
 function saveRegistration(registration, receivedAt) {
-  var sheet = sheetWithHeader(ALL_REQUESTS_SHEET, ALL_REQUESTS_HEADER);
-  sheet.appendRow(allRequestsRow(registration, receivedAt).map(asPlainValue));
-  sheet.getRange(sheet.getLastRow(), 1).setNumberFormat('dd.MM.yyyy HH:mm');
+  var lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    writeRow(sheetWithHeader(ALL_REQUESTS_SHEET, ALL_REQUESTS_HEADER), allRequestsRow(registration, receivedAt));
+    registration.cities.forEach(function (city) {
+      writeRow(sheetWithHeader(city, CITY_HEADER), cityRow(registration, receivedAt));
+    });
+    SpreadsheetApp.flush();
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+// Пишет только в первые row.length колонок, под последней заполненной строкой этих колонок.
+// appendRow здесь не годится: он смотрит на весь лист, включая колонки Ирины справа.
+function writeRow(sheet, row) {
+  var lastRow = Math.max(sheet.getLastRow(), 1);
+  var target = rowAfterLastFilled(sheet.getRange(1, 1, lastRow, row.length).getValues());
+  if (target > sheet.getMaxRows()) sheet.insertRowsAfter(sheet.getMaxRows(), target - sheet.getMaxRows());
+  sheet.getRange(target, 1, 1, row.length).setValues([row.map(asPlainValue)]);
+  sheet.getRange(target, 1).setNumberFormat('dd.MM.yyyy HH:mm');
 }
 
 function sheetWithHeader(name, header) {
