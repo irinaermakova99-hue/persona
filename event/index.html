@@ -59,6 +59,8 @@
   }
   button:hover { background: var(--accent-dark); }
   button:disabled { opacity: .6; cursor: default; }
+  button.secondary { color: var(--accent); background: transparent; border: 1px dashed var(--accent); margin: 0 0 12px; }
+  button.secondary:hover { background: var(--bg); }
   .status { margin: 12px 0 0; color: var(--error); }
   .thanks { text-align: center; }
   .thanks h2 { color: var(--accent); }
@@ -109,6 +111,7 @@
         <input type="checkbox" name="consent" required>
         <span>Я согласен(-на) на обработку персональных данных и их передачу партнёрам бизнес-встреч <span class="req">*</span></span>
       </label>
+      <button type="button" class="secondary" id="fill-test" hidden>Заполнить тестовыми данными</button>
       <button type="submit" id="submit">Зарегистрироваться</button>
       <p class="status" id="status" role="alert" hidden></p>
     </form>
@@ -135,6 +138,33 @@
   }
   cityBoxes.forEach((box) => box.addEventListener('change', checkCities));
   checkCities();
+
+  // Для ручной проверки: с ?test в адресе появляется кнопка, которая подставляет
+  // выдуманного участника. Города не трогает: их под каждую проверку отмечают руками.
+  if (new URLSearchParams(location.search).has('test')) {
+    const pick = (list) => list[Math.floor(Math.random() * list.length)];
+    const digits = (n) => Array.from({ length: n }, () => Math.floor(Math.random() * 10)).join('');
+    const people = [
+      ['Анна Петрова', 'anna.petrova'], ['Игорь Ковалёв', 'igor.kovalev'], ['Марина Сидоренко', 'marina.sidorenko'],
+      ['Дмитрий Жук', 'dmitry.zhuk'], ['Ольга Мельник', 'olga.melnik'], ['Сергей Новик', 'sergey.novik'],
+      ['Наталья Бондарь', 'natalia.bondar'], ['Алексей Лис', 'alexey.lis'], ['Елена Кравец', 'elena.kravets'],
+      ['Павел Гончар', 'pavel.gonchar'],
+    ];
+    const companies = ['ООО «Тестовая мануфактура»', 'ИП Пример', 'ЧУП «Вымышленный хлеб»', 'ООО «Демо Логистик»', 'ОДО «Проба и Ко»'];
+    const topics = ['Как выйти на новые рынки', 'Где взять оборотные средства', 'Как найти сотрудников в регионе', 'Экспорт в Россию и Казахстан', ''];
+    const fillButton = document.getElementById('fill-test');
+    fillButton.hidden = false;
+    fillButton.addEventListener('click', () => {
+      const [name, login] = pick(people);
+      const fields = form.elements;
+      fields.name.value = name;
+      fields.company.value = pick(companies);
+      fields.phone.value = `+375 ${pick(['25', '29', '33', '44'])} ${digits(3)}-${digits(2)}-${digits(2)}`;
+      fields.email.value = `${login}.${digits(3)}@example.com`;
+      fields.topic.value = pick(topics);
+      fields.consent.checked = true;
+    });
+  }
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
