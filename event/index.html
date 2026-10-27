@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Деловой маршрут — регистрация</title>
+<meta name="description" content="Деловой маршрут: бизнес-встречи в Солигорске, Борисове, Молодечно и Слуцке. Регистрация участников.">
+<style>
+  :root {
+    --bg: #f4f1ea;
+    --card: #ffffff;
+    --ink: #1e2a2b;
+    --muted: #5d6a6b;
+    --accent: #1f6f62;
+    --accent-dark: #17564c;
+    --line: #d9d4c7;
+    --error: #a3392b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 17px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+  main { max-width: 640px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1 { font-size: 34px; line-height: 1.15; margin: 0 0 12px; }
+  h2 { font-size: 22px; margin: 0 0 16px; }
+  .lead { color: var(--muted); margin: 0 0 24px; }
+  .dates { list-style: none; padding: 0; margin: 0 0 32px; display: grid; gap: 6px; }
+  .dates b { display: inline-block; min-width: 7.5em; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 24px 20px; }
+  .field { margin: 0 0 18px; }
+  label, legend { display: block; font-weight: 600; margin: 0 0 6px; }
+  .req { color: var(--accent); }
+  input[type=text], input[type=tel], input[type=email], textarea {
+    width: 100%;
+    padding: 12px;
+    font: inherit;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--card);
+  }
+  input:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
+  textarea { min-height: 96px; resize: vertical; }
+  fieldset { border: 0; margin: 0 0 18px; padding: 0; }
+  .check { display: flex; gap: 10px; align-items: flex-start; font-weight: 400; padding: 6px 0; cursor: pointer; }
+  .check input { width: 20px; height: 20px; margin: 2px 0 0; flex: none; accent-color: var(--accent); }
+  button {
+    width: 100%;
+    min-height: 52px;
+    font: inherit;
+    font-weight: 600;
+    color: #fff;
+    background: var(--accent);
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  button:hover { background: var(--accent-dark); }
+  button:disabled { opacity: .6; cursor: default; }
+  .status { margin: 12px 0 0; color: var(--error); }
+  .thanks { text-align: center; }
+  .thanks h2 { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Деловой маршрут</h1>
+  <p class="lead">Мы проводим серию бизнес-встреч для предпринимателей в четырёх городах. Начало в 10:00.</p>
+  <ul class="dates">
+    <li><b>Солигорск</b> 12 ноября 2026</li>
+    <li><b>Борисов</b> 19 ноября 2026</li>
+    <li><b>Молодечно</b> 26 ноября 2026</li>
+    <li><b>Слуцк</b> 3 декабря 2026</li>
+  </ul>
+
+  <section class="card" id="registration">
+    <form id="form">
+      <h2>Регистрация</h2>
+      <div class="field">
+        <label for="name">ФИО <span class="req">*</span></label>
+        <input type="text" id="name" name="name" autocomplete="name" required>
+      </div>
+      <div class="field">
+        <label for="company">Название компании <span class="req">*</span></label>
+        <input type="text" id="company" name="company" autocomplete="organization" required>
+      </div>
+      <div class="field">
+        <label for="phone">Номер телефона <span class="req">*</span></label>
+        <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="+375 29 123-45-67" required>
+      </div>
+      <div class="field">
+        <label for="email">Email <span class="req">*</span></label>
+        <input type="email" id="email" name="email" autocomplete="email" required>
+      </div>
+      <fieldset>
+        <legend>Город, в котором вы бы хотели посетить бизнес-встречу? <span class="req">*</span></legend>
+        <label class="check"><input type="checkbox" name="cities" value="Солигорск"> Солигорск, 12 ноября</label>
+        <label class="check"><input type="checkbox" name="cities" value="Борисов"> Борисов, 19 ноября</label>
+        <label class="check"><input type="checkbox" name="cities" value="Молодечно"> Молодечно, 26 ноября</label>
+        <label class="check"><input type="checkbox" name="cities" value="Слуцк"> Слуцк, 3 декабря</label>
+      </fieldset>
+      <div class="field">
+        <label for="topic">О чём в контексте вашего бизнеса вы хотели бы поговорить с нашими экспертами?</label>
+        <textarea id="topic" name="topic"></textarea>
+      </div>
+      <label class="check field">
+        <input type="checkbox" name="consent" required>
+        <span>Я согласен(-на) на обработку персональных данных и их передачу партнёрам бизнес-встреч <span class="req">*</span></span>
+      </label>
+      <button type="submit" id="submit">Зарегистрироваться</button>
+      <p class="status" id="status" role="alert" hidden></p>
+    </form>
+
+    <div class="thanks" id="thanks" hidden>
+      <h2>Спасибо, вы зарегистрированы</h2>
+      <p>Ждём вас на встрече.</p>
+    </div>
+  </section>
+</main>
+
+<script>
+  // Адрес веб-приложения Google Apps Script. Как его получить — event/SETUP.md, шаг 4.
+  const SCRIPT_URL = 'ВСТАВЬТЕ_СЮДА_АДРЕС_ВЕБ_ПРИЛОЖЕНИЯ';
+
+  const form = document.getElementById('form');
+  const cityBoxes = form.querySelectorAll('input[name=cities]');
+  const status = document.getElementById('status');
+
+  // Браузер умеет требовать одну галочку, но не «хотя бы одну из группы» — помогаем ему.
+  function checkCities() {
+    const anyChecked = [...cityBoxes].some((box) => box.checked);
+    cityBoxes[0].setCustomValidity(anyChecked ? '' : 'Выберите хотя бы один город');
+  }
+  cityBoxes.forEach((box) => box.addEventListener('change', checkCities));
+  checkCities();
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    status.hidden = true;
+    const fields = form.elements;
+    const data = {
+      name: fields.name.value,
+      company: fields.company.value,
+      phone: fields.phone.value,
+      email: fields.email.value,
+      cities: [...cityBoxes].filter((box) => box.checked).map((box) => box.value),
+      topic: fields.topic.value,
+      consent: fields.consent.checked,
+    };
+    try {
+      // Тело строкой без своих заголовков: так запрос «простой» и браузер не требует CORS-разрешения.
+      const response = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) });
+      const result = await response.json();
+      if (!result.ok) throw new Error(result.error);
+      form.hidden = true;
+      document.getElementById('thanks').hidden = false;
+    } catch (error) {
+      status.textContent = 'Не удалось отправить заявку. Попробуйте ещё раз.';
+      status.hidden = false;
+    }
+  });
+</script>
+</body>
+</html>
