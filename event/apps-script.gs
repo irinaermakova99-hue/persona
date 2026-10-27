@@ -3,9 +3,9 @@
 
 // Видна при открытии адреса веб-приложения: так понятно, какой код сейчас развёрнут.
 // Меняем при каждом изменении скрипта.
-var SCRIPT_VERSION = '2 — листы городов';
+var SCRIPT_VERSION = '3 — все листы городов создаются сразу';
 
-var CITIES =['Солигорск', 'Борисов', 'Молодечно', 'Слуцк'];
+var CITIES = ['Солигорск', 'Борисов', 'Молодечно', 'Слуцк'];
 var REQUIRED_FIELDS = { name: 'ФИО', company: 'Название компании', phone: 'Номер телефона', email: 'Email' };
 var EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 var UNREADABLE = 'Заявка пришла в непонятном виде';
@@ -66,6 +66,10 @@ function rowAfterLastFilled(values) {
 
 var ALL_REQUESTS_SHEET = 'Все заявки';
 var ALL_REQUESTS_HEADER = ['Дата и время', 'ФИО', 'Компания', 'Телефон', 'Email', 'Города', 'Тема'];
+var CITY_HEADER = ['Дата и время', 'ФИО', 'Компания', 'Телефон', 'Email', 'Тема'];
+// Сколько заявка ждёт, пока запишется предыдущая. Одна запись занимает доли секунды,
+// так что 20 секунд хватает на очередь из многих заявок, а участник не ждёт слишком долго.
+var LOCK_WAIT_MS = 20000;
 
 // Страница отправляет заявку сюда: POST, тело — JSON строкой.
 function doPost(e) {
@@ -86,18 +90,19 @@ function doGet() {
     'Версия кода: ' + SCRIPT_VERSION + '.');
 }
 
-var CITY_HEADER = ['Дата и время', 'ФИО', 'Компания', 'Телефон', 'Email', 'Тема'];
-
 // Заявка ложится строкой на «Все заявки» и на лист каждого выбранного города.
+// Листы всех городов создаются при любой заявке: удалённый лист вернётся, даже если
+// следующая заявка на другой город.
 // Блокировка: пока одна заявка ищет свободную строку и пишет, вторая ждёт,
 // иначе обе нашли бы одну и ту же строку.
 function saveRegistration(registration, receivedAt) {
   var lock = LockService.getScriptLock();
-  lock.waitLock(20000);
+  lock.waitLock(LOCK_WAIT_MS);
   try {
     writeRow(sheetWithHeader(ALL_REQUESTS_SHEET, ALL_REQUESTS_HEADER), allRequestsRow(registration, receivedAt));
-    registration.cities.forEach(function (city) {
-      writeRow(sheetWithHeader(city, CITY_HEADER), cityRow(registration, receivedAt));
+    CITIES.forEach(function (city) {
+      var sheet = sheetWithHeader(city, CITY_HEADER);
+      if (registration.cities.indexOf(city) !== -1) writeRow(sheet, cityRow(registration, receivedAt));
     });
     SpreadsheetApp.flush();
   } finally {
